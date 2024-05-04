@@ -16,24 +16,27 @@ router.get("/signup", (req, res) => {
 // * creates a user
 router.post("/signup", async (req, res) => {
   const { fullName, email, password } = req.body;
-  await User.create({
-    fullName,
-    email,
-    password,
-  });
-  return res.redirect("/");
+  try {
+    await User.create({
+      fullName,
+      email,
+      password,
+    });
+    return res.redirect("/");
+  } catch (error) {
+    console.log("Error: ", error.message);
+  }
 });
 
 // * signs in a user
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = User.matchPassword(email, password);
-    console.log("user", user);
-    return res.redirect("/");
+    const user = await User.matchPassword(email, password);
+    if (user) return res.status(201).redirect("/");
   } catch (error) {
     console.log("Error: ", error);
-    res.status(404).json({ msg: error });
+    return res.status(401).json({ msg: error });
   }
 });
 

@@ -48,8 +48,8 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-userSchema.static("matchPassword", function (email, password) {
-  const user = this.findOne({ email });
+userSchema.static("matchPassword", async function (email, password) {
+  const user = await this.findOne({ email });
   if (!user) throw new Error("User not found");
 
   const salt = user.salt;
@@ -57,7 +57,7 @@ userSchema.static("matchPassword", function (email, password) {
   const hashedAttempt = hashPassword(password, salt); // * hashing the password provided by the user during login to check whether the hashed version of the password matches with the hashed password stored in the DB
   if (hashedPassword !== hashedAttempt) throw new Error("Incorrect password!");
 
-  return { ...user, password: undefined, salt: undefined };
+  return user;
 });
 
 const User = model("user", userSchema);
