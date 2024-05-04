@@ -20,7 +20,9 @@ connectMongoDB(process.env.MONGODB_URI)
     console.log("Error while connecting to mongoDB atlas", err);
   });
 
+// ? middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // ? Static ROUTES
 app.get("/", (req, res) => {
