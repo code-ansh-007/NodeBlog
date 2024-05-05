@@ -22,9 +22,12 @@ router.post("/signup", async (req, res) => {
       email,
       password,
     });
-    return res.redirect("/");
+    return res.redirect("/user/signin");
   } catch (error) {
     console.log("Error: ", error.message);
+    return res.render("signup", {
+      error: "Email already exists!",
+    });
   }
 });
 
@@ -32,12 +35,18 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.matchPassword(email, password);
-    if (user) return res.status(201).redirect("/");
+    const token = await User.matchPasswordAndGenerateToken(email, password);
+    return res.cookie("token", token).redirect("/");
   } catch (error) {
-    console.log("Error: ", error);
-    return res.status(401).json({ msg: error });
+    return res.render("signin", {
+      error: "Incorrect Email or Password",
+    });
   }
+});
+
+// * logs out a user
+router.get("/logout", (req, res) => {
+  return res.clearCookie("token").redirect("/");
 });
 
 export default router;

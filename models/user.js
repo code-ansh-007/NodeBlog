@@ -1,5 +1,6 @@
 import mongoose, { model } from "mongoose";
 import { createHmac, randomBytes } from "crypto";
+import { createTokenForUser } from "../services/authentication.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -48,17 +49,21 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-userSchema.static("matchPassword", async function (email, password) {
-  const user = await this.findOne({ email });
-  if (!user) throw new Error("User not found");
+userSchema.static(
+  "matchPasswordAndGenerateToken",
+  async function (email, password) {
+    const user = await this.findOne({ email });
+    if (!user) throw new Error("User not found");
 
-  const salt = user.salt;
-  const hashedPassword = user.password;
-  const hashedAttempt = hashPassword(password, salt); // * hashing the password provided by the user during login to check whether the hashed version of the password matches with the hashed password stored in the DB
-  if (hashedPassword !== hashedAttempt) throw new Error("Incorrect password!");
+    const salt = user.salt;
+    const hashedPassword = user.password;
+    const hashedAttempt = hashPassword(password, salt); // * hashing the password provided by the user during login to check whether the hashed version of the password matches with the hashed password stored in the DB
+    if (hashedPassword !== hashedAttempt)
+      throw new Error("Incorrect password!");
 
-  return user;
-});
+    return createTokenForUser(user); // * returning a jwt token
+  }
+);
 
 const User = model("user", userSchema);
 

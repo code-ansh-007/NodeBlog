@@ -3,6 +3,8 @@ import path from "path";
 import userRoute from "./routes/user.js";
 import "dotenv/config";
 import connectMongoDB from "./mongodb-connection.js";
+import cookieParser from "cookie-parser";
+import { checkForAuthenticationCookie } from "./middlewares/authentication.js";
 
 const app = express();
 const PORT = 3000;
@@ -23,10 +25,14 @@ connectMongoDB(process.env.MONGODB_URI)
 // ? middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(checkForAuthenticationCookie("token"));
 
 // ? Static ROUTES
 app.get("/", (req, res) => {
-  return res.render("home");
+  return res.render("home", {
+    user: req.user,
+  });
 });
 
 // ? ROUTES
