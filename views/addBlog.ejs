@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("./partials/head.ejs") %>
+    <title>Add Blog</title>
+  </head>
+  <body>
+    <%- include("./partials/nav.ejs") %>
+    <div class="flex flex-col items-center justify-center h-screen gap-10 px-8">
+      <span class="text-xl font-semibold">Create Your Awesome Blog</span>
+      <form
+        class="max-w-sm mx-auto w-full"
+        action="/blog"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <%- include("./partials/error.ejs") %>
+        <div class="mb-5">
+          <label
+            for="title"
+            class="block mb-2 text-sm font-medium text-gray-900"
+            >Blog Title</label
+          >
+          <input
+            type="text"
+            id="title"
+            name="title"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Once there was a man..."
+            required
+          />
+        </div>
+        <div class="mb-5">
+          <label for="body" class="block mb-2 text-sm font-medium text-gray-900"
+            >Blog Content</label
+          >
+          <textarea
+            id="body"
+            name="body"
+            rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Lets be creative now..."
+          ></textarea>
+        </div>
+        <div class="mb-5">
+          <label
+            class="block mb-2 text-sm font-medium text-gray-900"
+            for="coverImage"
+            >Cover Image</label
+          >
+          <input
+            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+            id="coverImage"
+            name="coverImage"
+            type="file"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+        >
+          Create
+        </button>
+      </form>
+    </div>
+    <%-include("./partials/scripts.ejs") %>
+  </body>
+</html>

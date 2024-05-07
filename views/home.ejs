@@ -4,8 +4,82 @@
     <%- include("./partials/head.ejs") %>
     <title>Node.Js Blog Application</title>
   </head>
+
   <body>
-    <%- include("./partials/nav.ejs") %> <%= JSON.stringify(user) %> <%-
-    include("./partials/scripts.ejs") %>
+    <%- include("./partials/nav.ejs") %>
+
+    <section
+      class="bg-center bg-no-repeat bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-gray-700 bg-blend-multiply mb-5"
+    >
+      <div class="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
+        <h1
+          class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl"
+        >
+          Let's Discuss Some Real Shit
+        </h1>
+        <p
+          class="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48"
+        >
+          Here at NodeBlogs we talk about all kinds of stuff, just browse around
+          to discover something of your liking & join the community to post
+          blogs yourself for FREE.
+        </p>
+
+        <div
+          class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0"
+        >
+          <a
+            href="#trendingBlogs"
+            class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+          >
+            View Blogs
+            <svg
+              class="w-3.5 h-3.5 ms-2 rtl:rotate-180"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div
+      id="trendingBlogs"
+      class="flex justify-center items-center mt-10 flex-col px-4"
+    >
+      <span class="text-2xl font-semibold text-start w-full mb-8"
+        >Trending Blogs</span
+      >
+      <div
+        class="columns-1 md:colums-2 lg:columns-3 gap-4 items-center [&>div:not(:first-child)]:mt-4"
+      >
+        <% blogs.forEach(blog => { %> <%- include("./partials/blogCard.ejs",
+        {title: blog.title, body: blog.body, coverImageURL: blog.coverImageURL,
+        blogId: blog._id}) %> <% }) %>
+      </div>
+    </div>
+
+    <%- include("./partials/scripts.ejs") %>
+    <script>
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+    </script>
   </body>
 </html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("./partials/head.ejs") %>
+    <title>Blog Details</title>
+  </head>
+  <body>
+    <%- include("./partials/nav.ejs") %>
+    <div class="p-4 flex flex-row gap-4">
+      <img
+        src="<%= blog.coverImageURL %>"
+        alt="Blog Image"
+        class="w-1/2 rounded-md"
+      />
+      <div class="flex flex-col gap-2">
+        <span class="capitalize text-2xl font-bold"><%= blog.title %></span>
+        <span><%= blog.body %></span>
+      </div>
+    </div>
+    <%- include("./partials/scripts.ejs") %>
+  </body>
+</html>
