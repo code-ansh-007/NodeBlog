@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema(
       enum: ["USER", "ADMIN"],
       default: "USER",
     },
+    // upVotesCommentIds: {
+    //   type: Array,
+    // },
+    // downVotesCommentIds: {
+    //   type: Array,
+    // },
   },
   { timestamps: true }
 );

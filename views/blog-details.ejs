@@ -6,17 +6,138 @@
   </head>
   <body>
     <%- include("./partials/nav.ejs") %>
-    <div class="p-4 flex flex-row gap-4">
+    <div class="p-4 flex flex-col items-center gap-4">
+      <span class="capitalize text-3xl font-bold"><%= blog.title %></span>
       <img
         src="<%= blog.coverImageURL %>"
         alt="Blog Image"
-        class="w-1/2 rounded-md"
+        class="w-full md:w-1/2 max-h-[350px] object-cover object-center rounded-md"
       />
-      <div class="flex flex-col gap-2">
-        <span class="capitalize text-2xl font-bold"><%= blog.title %></span>
+      <div class="flex flex-row items-center gap-2 text-neutral-500">
+        <span>Created By</span>
+        <img
+          src="<%= blog.createdBy.profileImageURL %>"
+          alt="profile image"
+          class="w-7 h-7 rounded-full"
+        />
+        <span><%= blog.createdBy.fullName %></span>
+      </div>
+      <div class="flex flex-col gap-2 md:max-w-[600px]">
         <span><%= blog.body %></span>
       </div>
+      <div class="md:w-1/2 w-full flex flex-col gap-2">
+        <span class="text-start font-semibold">Comments</span>
+        <form
+          action="/blog/comment/<%= blog._id %>"
+          method="post"
+          class="flex flex-row items-center gap-2 mb-5"
+        >
+          <input
+            type="text"
+            name="content"
+            id="content"
+            placeholder="What do you think of this blog ?"
+            class="rounded-md w-full py-1"
+          />
+          <button class="bg-blue-500 text-white px-4 py-1 rounded-md">
+            Add
+          </button>
+        </form>
+        <div class="flex flex-col gap-4">
+          <% comments?.forEach(comment => { %>
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-row items-center gap-2">
+              <img
+                src="<%= comment.createdBy.profileImageURL %>"
+                alt="profile image"
+                class="w-7 h-7 rounded-full"
+              />
+              <span class="text-sm text-neutral-500"
+                ><%= comment.createdBy.fullName %></span
+              >
+            </div>
+            <span class="text-sm"><%= comment.content%></span>
+            <div class="flex flex-row items-center gap-5">
+              <div class="flex flex-row items-center gap-2">
+                <div>
+                  <% if (comment.upVotes.includes(user._id)) { %>
+                  <button
+                    onclick="toggleCommentUpVote('<%= comment._id %>', '<%= blog._id %>' )"
+                  >
+                    <i class="fa-solid fa-thumbs-up text-blue-500"></i>
+                  </button>
+                  <% } else { %>
+                  <button
+                    onclick="toggleCommentUpVote('<%= comment._id %>', '<%= blog._id %>')"
+                  >
+                    <i class="fa-regular fa-thumbs-up"></i>
+                  </button>
+                  <% } %>
+                </div>
+                <span><%= comment.upVotes.length %></span>
+                <span class="text-xs">Up Votes</span>
+              </div>
+              <div class="flex flex-row items-center gap-2">
+                <div class="">
+                  <div>
+                    <% if (comment.downVotes.includes(user._id)) { %>
+                    <button
+                      onclick="toggleCommentDownVote('<%= comment._id %>', '<%= blog._id %>')"
+                    >
+                      <i class="fa-solid fa-thumbs-down text-red-500"></i>
+                    </button>
+                    <% } else { %>
+                    <button
+                      onclick="toggleCommentDownVote('<%= comment._id %>', '<%= blog._id %>')"
+                    >
+                      <i class="fa-regular fa-thumbs-down"></i>
+                    </button>
+                    <% } %>
+                  </div>
+                </div>
+                <span><%= comment.downVotes.length %></span>
+                <span class="text-xs">Down Votes</span>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </div>
     </div>
+    <script>
+      function toggleCommentUpVote(commentId, blogId) {
+        fetch("/blog/toggle-comment-upvote", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ commentId, blogId }),
+        })
+          .then((res) => {
+            if (res.redirected) {
+              window.location.href = res.url;
+            } else return;
+          })
+          .then((data) => console.log(data))
+          .catch((err) => console.log("Upvote Error: ", err));
+      }
+      function toggleCommentDownVote(commentId, blogId) {
+        fetch("/blog/toggle-comment-downvote", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ commentId, blogId }),
+        })
+          .then((res) => {
+            if (res.redirected) {
+              window.location.href = res.url;
+            } else return;
+          })
+          .then((data) => console.log(data))
+          .catch((err) => console.log("DownVote Error: ", err));
+      }
+    </script>
     <%- include("./partials/scripts.ejs") %>
   </body>
 </html>

@@ -28,7 +28,7 @@ connectMongoDB(process.env.MONGODB_URI)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(checkForAuthenticationCookie("token"));
+app.use(checkForAuthenticationCookie("token")); // ? this runs for every request run on the server
 app.use(express.static(path.resolve("./public"))); // ?  this middleware tells express that you can server static assets from the public folder, which enables us to render images in our SSR pages using ejs
 
 // ? Static ROUTES
