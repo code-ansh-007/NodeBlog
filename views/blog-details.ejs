@@ -8,11 +8,13 @@
     <%- include("./partials/nav.ejs") %>
     <div class="p-4 flex flex-col items-center gap-4">
       <span class="capitalize text-3xl font-bold"><%= blog.title %></span>
+      <% if (blog.coverImageURL !== "na") { %>
       <img
         src="<%= blog.coverImageURL %>"
         alt="Blog Image"
         class="w-full md:w-1/2 max-h-[350px] object-cover object-center rounded-md"
       />
+      <% } %>
       <div class="flex flex-row items-center gap-2 text-neutral-500">
         <span>Created By</span>
         <img
@@ -60,7 +62,7 @@
             <div class="flex flex-row items-center gap-5">
               <div class="flex flex-row items-center gap-2">
                 <div>
-                  <% if (comment.upVotes.includes(user._id)) { %>
+                  <% if (comment.upVotes.includes(user?._id)) { %>
                   <button
                     onclick="toggleCommentUpVote('<%= comment._id %>', '<%= blog._id %>' )"
                   >
@@ -80,7 +82,7 @@
               <div class="flex flex-row items-center gap-2">
                 <div class="">
                   <div>
-                    <% if (comment.downVotes.includes(user._id)) { %>
+                    <% if (comment.downVotes.includes(user?._id)) { %>
                     <button
                       onclick="toggleCommentDownVote('<%= comment._id %>', '<%= blog._id %>')"
                     >

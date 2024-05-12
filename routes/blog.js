@@ -64,12 +64,16 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
 router.post("/comment/:blogId", async (req, res) => {
   const blogId = req.params.blogId;
   try {
-    await Comment.create({
-      content: req.body.content,
-      createdBy: req.user._id,
-      blogRef: blogId,
-    });
-    res.redirect(`/blog/${blogId}`);
+    if (req.user) {
+      await Comment.create({
+        content: req.body.content,
+        createdBy: req.user._id,
+        blogRef: blogId,
+      });
+      res.redirect(`/blog/${blogId}`);
+    } else {
+      res.redirect("/user/signin");
+    }
   } catch (error) {
     res.json({ message: "Error adding comment", error });
   }
